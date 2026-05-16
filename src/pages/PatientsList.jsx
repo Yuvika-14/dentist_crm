@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, Plus, Eye, Phone, Mail, X, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,6 +43,82 @@ const PatientsList = ({ patients, addPatient, deletePatient }) => {
       deletePatient(patient.id);
     }
   };
+
+  const addPatientModal = showAddModal ? createPortal(
+    <div className="modal-backdrop">
+      <div className="card modal-card large-modal animate-fade-in">
+        <div className="modal-header">
+          <div>
+            <h2>Add Patient</h2>
+            <p>Create a complete dental record for future visits.</p>
+          </div>
+          <button className="icon-btn" onClick={() => setShowAddModal(false)} aria-label="Close add patient form">
+            <X size={18} />
+          </button>
+        </div>
+
+        <form onSubmit={handleAddSubmit} className="form-grid">
+          <div className="input-group">
+            <label className="input-label">Full Name</label>
+            <input required type="text" className="input-field" value={newPatient.name} onChange={(event) => setNewPatient({ ...newPatient, name: event.target.value })} />
+          </div>
+          <div className="input-group">
+            <label className="input-label">Age</label>
+            <input required type="number" min="1" className="input-field" value={newPatient.age} onChange={(event) => setNewPatient({ ...newPatient, age: event.target.value })} />
+          </div>
+          <div className="input-group">
+            <label className="input-label">Gender</label>
+            <select className="input-field" value={newPatient.gender} onChange={(event) => setNewPatient({ ...newPatient, gender: event.target.value })}>
+              <option>Female</option>
+              <option>Male</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div className="input-group">
+            <label className="input-label">Phone Number</label>
+            <input required type="tel" className="input-field" value={newPatient.phone} onChange={(event) => setNewPatient({ ...newPatient, phone: event.target.value })} />
+          </div>
+          <div className="input-group">
+            <label className="input-label">Email</label>
+            <input type="email" className="input-field" value={newPatient.email} onChange={(event) => setNewPatient({ ...newPatient, email: event.target.value })} />
+          </div>
+          <div className="input-group">
+            <label className="input-label">Blood Group</label>
+            <input type="text" className="input-field" value={newPatient.bloodGroup} onChange={(event) => setNewPatient({ ...newPatient, bloodGroup: event.target.value })} />
+          </div>
+          <div className="input-group">
+            <label className="input-label">Current Condition</label>
+            <input type="text" className="input-field" value={newPatient.condition} onChange={(event) => setNewPatient({ ...newPatient, condition: event.target.value })} />
+          </div>
+          <div className="input-group">
+            <label className="input-label">Next Visit</label>
+            <input type="date" className="input-field" value={newPatient.nextVisit} onChange={(event) => setNewPatient({ ...newPatient, nextVisit: event.target.value })} />
+          </div>
+          <div className="input-group span-2">
+            <label className="input-label">Address</label>
+            <input type="text" className="input-field" value={newPatient.address} onChange={(event) => setNewPatient({ ...newPatient, address: event.target.value })} />
+          </div>
+          <div className="input-group">
+            <label className="input-label">Allergies</label>
+            <input type="text" className="input-field" value={newPatient.allergies} onChange={(event) => setNewPatient({ ...newPatient, allergies: event.target.value })} />
+          </div>
+          <div className="input-group">
+            <label className="input-label">Emergency Contact</label>
+            <input type="text" className="input-field" value={newPatient.emergencyContact} onChange={(event) => setNewPatient({ ...newPatient, emergencyContact: event.target.value })} />
+          </div>
+          <div className="input-group span-2">
+            <label className="input-label">Clinical Notes</label>
+            <textarea className="input-field text-area" value={newPatient.notes} onChange={(event) => setNewPatient({ ...newPatient, notes: event.target.value })} />
+          </div>
+          <div className="modal-actions span-2">
+            <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)}>Cancel</button>
+            <button type="submit" className="btn btn-primary">Save Patient</button>
+          </div>
+        </form>
+      </div>
+    </div>,
+    document.body
+  ) : null;
 
   return (
     <div className="page-container animate-fade-in">
@@ -131,80 +208,7 @@ const PatientsList = ({ patients, addPatient, deletePatient }) => {
         </table>
       </div>
 
-      {showAddModal && (
-        <div className="modal-backdrop">
-          <div className="card modal-card large-modal animate-fade-in">
-            <div className="modal-header">
-              <div>
-                <h2>Add Patient</h2>
-                <p>Create a complete dental record for future visits.</p>
-              </div>
-              <button className="icon-btn" onClick={() => setShowAddModal(false)} aria-label="Close add patient form">
-                <X size={18} />
-              </button>
-            </div>
-
-            <form onSubmit={handleAddSubmit} className="form-grid">
-              <div className="input-group">
-                <label className="input-label">Full Name</label>
-                <input required type="text" className="input-field" value={newPatient.name} onChange={(event) => setNewPatient({ ...newPatient, name: event.target.value })} />
-              </div>
-              <div className="input-group">
-                <label className="input-label">Age</label>
-                <input required type="number" min="1" className="input-field" value={newPatient.age} onChange={(event) => setNewPatient({ ...newPatient, age: event.target.value })} />
-              </div>
-              <div className="input-group">
-                <label className="input-label">Gender</label>
-                <select className="input-field" value={newPatient.gender} onChange={(event) => setNewPatient({ ...newPatient, gender: event.target.value })}>
-                  <option>Female</option>
-                  <option>Male</option>
-                  <option>Other</option>
-                </select>
-              </div>
-              <div className="input-group">
-                <label className="input-label">Phone Number</label>
-                <input required type="tel" className="input-field" value={newPatient.phone} onChange={(event) => setNewPatient({ ...newPatient, phone: event.target.value })} />
-              </div>
-              <div className="input-group">
-                <label className="input-label">Email</label>
-                <input type="email" className="input-field" value={newPatient.email} onChange={(event) => setNewPatient({ ...newPatient, email: event.target.value })} />
-              </div>
-              <div className="input-group">
-                <label className="input-label">Blood Group</label>
-                <input type="text" className="input-field" value={newPatient.bloodGroup} onChange={(event) => setNewPatient({ ...newPatient, bloodGroup: event.target.value })} />
-              </div>
-              <div className="input-group">
-                <label className="input-label">Current Condition</label>
-                <input type="text" className="input-field" value={newPatient.condition} onChange={(event) => setNewPatient({ ...newPatient, condition: event.target.value })} />
-              </div>
-              <div className="input-group">
-                <label className="input-label">Next Visit</label>
-                <input type="date" className="input-field" value={newPatient.nextVisit} onChange={(event) => setNewPatient({ ...newPatient, nextVisit: event.target.value })} />
-              </div>
-              <div className="input-group span-2">
-                <label className="input-label">Address</label>
-                <input type="text" className="input-field" value={newPatient.address} onChange={(event) => setNewPatient({ ...newPatient, address: event.target.value })} />
-              </div>
-              <div className="input-group">
-                <label className="input-label">Allergies</label>
-                <input type="text" className="input-field" value={newPatient.allergies} onChange={(event) => setNewPatient({ ...newPatient, allergies: event.target.value })} />
-              </div>
-              <div className="input-group">
-                <label className="input-label">Emergency Contact</label>
-                <input type="text" className="input-field" value={newPatient.emergencyContact} onChange={(event) => setNewPatient({ ...newPatient, emergencyContact: event.target.value })} />
-              </div>
-              <div className="input-group span-2">
-                <label className="input-label">Clinical Notes</label>
-                <textarea className="input-field text-area" value={newPatient.notes} onChange={(event) => setNewPatient({ ...newPatient, notes: event.target.value })} />
-              </div>
-              <div className="modal-actions span-2">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">Save Patient</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      {addPatientModal}
     </div>
   );
 };

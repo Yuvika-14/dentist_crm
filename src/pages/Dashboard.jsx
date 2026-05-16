@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Activity, CalendarCheck, ArrowUpRight, Clock, Pill, AlertTriangle } from 'lucide-react';
+import { Users, Activity, CalendarCheck, ArrowUpRight, Clock, Pill, AlertTriangle, Stethoscope } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const formatDate = (date) => new Date(`${date}T00:00:00`).toLocaleDateString(undefined, {
@@ -30,15 +30,24 @@ const Dashboard = ({ data }) => {
   ));
 
   const patientName = (patientId) => patients.find((patient) => patient.id === Number(patientId))?.name || 'Unknown patient';
+  const upcomingAppointments = appointments
+    .filter((appointment) => appointment.date >= today && appointment.status !== 'Cancelled')
+    .sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`))
+    .slice(0, 4);
+  const recentVisits = Object.entries(history)
+    .flatMap(([patientId, entries]) => entries.map((entry) => ({ ...entry, patientId: Number(patientId) })))
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, 3);
 
   return (
     <div className="page-container animate-fade-in">
-      <div className="page-header">
+      <div className="dashboard-hero">
         <div>
-          <h1 className="page-title">Clinic Dashboard</h1>
-          <p className="page-subtitle">Monitor patients, visits, appointments, and active prescriptions.</p>
+          <span className="dashboard-kicker"><Stethoscope size={16} /> Clinic command center</span>
+          <h1 className="page-title">Today at {data.clinic?.name || 'NovaDental'}</h1>
+          <p className="page-subtitle">Monitor patient flow, follow-ups, active prescriptions, and chairside care activity.</p>
         </div>
-        <div className="flex-row gap-4">
+        <div className="dashboard-hero-actions">
           <button className="btn btn-secondary" onClick={() => navigate('/appointments')}>Schedule Visit</button>
           <button className="btn btn-primary" onClick={() => navigate('/patients')}>Open Patients</button>
         </div>
@@ -121,7 +130,7 @@ const Dashboard = ({ data }) => {
           )}
         </div>
 
-        <div className="card">
+        <div className="card care-queue-card">
           <div className="section-heading">
             <div>
               <h2>Follow-up Watchlist</h2>
@@ -149,6 +158,54 @@ const Dashboard = ({ data }) => {
               ))}
             </ul>
           )}
+        </div>
+      </div>
+
+      <div className="dashboard-grid secondary-dashboard-grid">
+        <div className="card">
+          <div className="section-heading">
+            <div>
+              <h2>Upcoming Care Queue</h2>
+              <p>Next scheduled patient interactions</p>
+            </div>
+            <button className="btn btn-secondary compact-btn" onClick={() => navigate('/appointments')}>Manage</button>
+          </div>
+
+          <ul className="record-list">
+            {upcomingAppointments.map((appointment) => (
+              <li key={appointment.id} className="queue-item">
+                <div>
+                  <strong>{patientName(appointment.patientId)}</strong>
+                  <span>{appointment.procedure}</span>
+                </div>
+                <div className="queue-time">
+                  <strong>{appointment.time}</strong>
+                  <span>{formatDate(appointment.date)}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="card">
+          <div className="section-heading">
+            <div>
+              <h2>Recent Clinical Activity</h2>
+              <p>Latest completed visit notes</p>
+            </div>
+          </div>
+
+          <ul className="record-list">
+            {recentVisits.map((visit) => (
+              <li key={visit.id} className="queue-item">
+                <div>
+                  <strong>{visit.diagnosis}</strong>
+                  <span>{patientName(visit.patientId)} · {visit.type}</span>
+                </div>
+                <span className="badge badge-primary">{formatDate(visit.date)}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
