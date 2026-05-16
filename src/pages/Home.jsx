@@ -1,23 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Activity, ArrowRight, CalendarCheck, FileText, Pill, ShieldCheck, Stethoscope, Users } from 'lucide-react';
+import { ArrowRight, CalendarCheck, FileText, ShieldCheck, Stethoscope, Users } from 'lucide-react';
 
 const Home = ({ data }) => {
   const navigate = useNavigate();
   const clinic = data?.clinic || {};
   const clinicName = clinic.name || 'Dental CRM';
-  const totalVisits = Object.values(data?.history || {}).flat().length;
-  const totalMedications = Object.values(data?.medications || {}).flat().length;
-  const nextAppointment = [...(data?.appointments || [])]
-    .filter((appointment) => appointment.status !== 'Cancelled')
-    .sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`))[0];
-
-  const metrics = [
-    { label: 'Patients', value: data?.patients?.length || 0, icon: Users, tone: 'primary' },
-    { label: 'Appointments', value: data?.appointments?.length || 0, icon: CalendarCheck, tone: 'warning' },
-    { label: 'Visit Records', value: totalVisits, icon: FileText, tone: 'success' },
-    { label: 'Medications', value: totalMedications, icon: Pill, tone: 'danger' }
-  ];
 
   return (
     <div className="home-container">
@@ -52,43 +40,12 @@ const Home = ({ data }) => {
             </div>
           </div>
 
-          <div className="clinic-preview animate-fade-in">
-            <div className="preview-header">
-              <div>
-                <span>Today at {clinicName}</span>
-                <strong>{clinic.openTime || '09:00'} - {clinic.closeTime || '18:00'}</strong>
-              </div>
-              <div className="preview-pulse"><Activity size={18} /></div>
-            </div>
-
-            <div className="preview-metrics">
-              {metrics.map((metric) => {
-                const Icon = metric.icon;
-                return (
-                  <div className="preview-metric" key={metric.label}>
-                    <div className={`metric-icon bg-${metric.tone}-light text-${metric.tone}`}>
-                      <Icon size={18} />
-                    </div>
-                    <strong>{metric.value}</strong>
-                    <span>{metric.label}</span>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="preview-panel">
-              <div className="preview-row">
-                <span>Next appointment</span>
-                <strong>{nextAppointment ? `${nextAppointment.date} ${nextAppointment.time}` : 'Not scheduled'}</strong>
-              </div>
-              <div className="preview-row">
-                <span>Default dentist</span>
-                <strong>{clinic.defaultDentist || 'Not set'}</strong>
-              </div>
-              <div className="preview-row">
-                <span>Clinic phone</span>
-                <strong>{clinic.phone || 'Not set'}</strong>
-              </div>
+          <div className="hero-visual animate-fade-in">
+            <div className="dental-photo-card">
+              <img
+                src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=80"
+                alt="Modern dental clinic treatment room with digital patient management workspace"
+              />
             </div>
           </div>
         </section>
