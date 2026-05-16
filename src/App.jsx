@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
@@ -6,38 +6,42 @@ import PatientsList from './pages/PatientsList';
 import PatientDetail from './pages/PatientDetail';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Appointments from './pages/Appointments';
+import Settings from './pages/Settings';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
-const initialPatients = [
-  { id: 1, name: 'Eleanor Shellstrop', age: 34, phone: '(555) 012-3456', lastVisit: '2026-04-10', nextVisit: '2026-10-10', condition: 'Healthy' },
-  { id: 2, name: 'Chidi Anagonye', age: 36, phone: '(555) 098-7654', lastVisit: '2026-04-20', nextVisit: '2026-05-05', condition: 'Cavity Treatment' },
-  { id: 3, name: 'Tahani Al-Jamil', age: 31, phone: '(555) 111-2222', lastVisit: '2026-03-15', nextVisit: '2026-09-15', condition: 'Teeth Whitening' }
-];
+const STORAGE_KEY = 'novaDentalCrmDataV2';
 
-const initialHistory = {
-  1: [
-    { id: 101, date: '2026-04-10', type: 'Procedure', notes: 'Routine checkup and cleaning. No cavities.' },
-    { id: 102, date: '2025-10-12', type: 'Consultation', notes: 'Patient complained of slight sensitivity. Applied fluoride varnish.' }
-  ],
-  2: [
-    { id: 201, date: '2026-04-20', type: 'Procedure', notes: 'Identified cavity on molar 14. Scheduled filling.' },
-    { id: 202, date: '2026-02-14', type: 'Emergency', notes: 'Chipped tooth repair (composite).' }
-  ],
-  3: [
-    { id: 301, date: '2026-03-15', type: 'Procedure', notes: 'Laser teeth whitening session 1/3.' }
-  ]
+const initialData = {
+  patients: [],
+  history: {},
+  medications: {},
+  appointments: [],
+  clinic: {
+    name: 'NovaDental Clinic',
+    phone: '(555) 700-8844',
+    email: 'frontdesk@novadental.test',
+    address: '24 Care Avenue, Suite 8',
+    openTime: '09:00',
+    closeTime: '18:00',
+    defaultDentist: 'Dr. Smith'
+  }
 };
 
-const initialMedications = {
-  1: [],
-  2: [
-    { id: 1, name: 'Amoxicillin 500mg', dosage: '1 capsule every 8 hours', status: 'Active' },
-    { id: 2, name: 'Ibuprofen 400mg', dosage: 'As needed for pain', status: 'Active' }
-  ],
-  3: []
+const readStoredData = () => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? { ...initialData, ...JSON.parse(stored) } : initialData;
+  } catch {
+    return initialData;
+  }
 };
 
-// Protected Route Wrapper
+const createId = (items) => {
+  const numericIds = items.map((item) => Number(item.id)).filter(Number.isFinite);
+  return numericIds.length > 0 ? Math.max(...numericIds) + 1 : 1;
+};
+
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
   const location = useLocation();
@@ -50,45 +54,183 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function AppContent() {
-  const [patients, setPatients] = useState(initialPatients);
-  const [history, setHistory] = useState(initialHistory);
-  const [medications, setMedications] = useState(initialMedications);
+  const [data, setData] = useState(readStoredData);
 
-  const addPatient = (patient) => {
-    const newId = patients.length > 0 ? Math.max(...patients.map(p => p.id)) + 1 : 1;
-    setPatients([...patients, { ...patient, id: newId }]);
-    setHistory({ ...history, [newId]: [] });
-    setMedications({ ...medications, [newId]: [] });
-  };
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }, [data]);
 
-  const addVisit = (patientId, visit) => {
-    const newVisitId = Math.random().toString(36).substring(7);
-    setHistory({
-      ...history,
-      [patientId]: [{ id: newVisitId, ...visit }, ...(history[patientId] || [])]
-    });
-  };
+  const actions = useMemo(() => ({
+    addPatient: (patient) => {
+      setData((current) => {
+        const newId = createId(current.patients);
+        const cleanPatient = {
+          id: newId,
+          lastVisit: 'No visits yet',
+          nextVisit: patient.nextVisit || 'Not scheduled',
+          condition: patient.condition || 'New patient',
+          allergies: patient.allergies || 'None reported',
+          notes: patient.notes || '',
+          ...patient,
+          age: Number(patient.age)
+        };
+
+        return {
+          ...current,
+          patients: [...current.patients, cleanPatient],
+          history: { ...current.history, [newId]: [] },
+          medications: { ...current.medications, [newId]: [] }
+        };
+      });
+    },
+    updatePatient: (patientId, updates) => {
+      setData((current) => ({
+        ...current,
+        patients: current.patients.map((patient) => (
+          patient.id === patientId ? { ...patient, ...updates, age: Number(updates.age ?? patient.age) } : patient
+        ))
+      }));
+    },
+    deletePatient: (patientId) => {
+      setData((current) => {
+        const nextHistory = { ...current.history };
+        const nextMedications = { ...current.medications };
+
+        delete nextHistory[patientId];
+        delete nextMedications[patientId];
+
+        return {
+          ...current,
+          patients: current.patients.filter((patient) => patient.id !== patientId),
+          appointments: current.appointments.filter((appointment) => Number(appointment.patientId) !== patientId),
+          history: nextHistory,
+          medications: nextMedications
+        };
+      });
+    },
+    addVisit: (patientId, visit) => {
+      setData((current) => ({
+        ...current,
+        history: {
+          ...current.history,
+          [patientId]: [{ id: Date.now(), ...visit }, ...(current.history[patientId] || [])]
+        },
+        patients: current.patients.map((patient) => (
+          patient.id === patientId
+            ? { ...patient, lastVisit: visit.date, condition: visit.diagnosis || patient.condition }
+            : patient
+        ))
+      }));
+    },
+    addMedication: (patientId, medication) => {
+      setData((current) => ({
+        ...current,
+        medications: {
+          ...current.medications,
+          [patientId]: [{ id: Date.now(), ...medication }, ...(current.medications[patientId] || [])]
+        }
+      }));
+    },
+    updateMedicationStatus: (patientId, medicationId, status) => {
+      setData((current) => ({
+        ...current,
+        medications: {
+          ...current.medications,
+          [patientId]: (current.medications[patientId] || []).map((medication) => (
+            medication.id === medicationId ? { ...medication, status } : medication
+          ))
+        }
+      }));
+    },
+    addAppointment: (appointment) => {
+      setData((current) => ({
+        ...current,
+        appointments: [...current.appointments, { id: createId(current.appointments), status: 'Scheduled', ...appointment }]
+      }));
+    },
+    updateAppointment: (appointmentId, updates) => {
+      setData((current) => ({
+        ...current,
+        appointments: current.appointments.map((appointment) => (
+          appointment.id === appointmentId ? { ...appointment, ...updates } : appointment
+        ))
+      }));
+    },
+    saveClinic: (clinic) => {
+      setData((current) => ({ ...current, clinic }));
+    },
+    clearClinicRecords: () => {
+      setData((current) => ({
+        ...current,
+        patients: [],
+        history: {},
+        medications: {},
+        appointments: []
+      }));
+    }
+  }), []);
 
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      
-      <Route 
-        path="/" 
+      <Route path="/" element={<Home data={data} />} />
+      <Route path="/login" element={<Login clinic={data.clinic} />} />
+
+      <Route
+        path="/"
         element={
           <ProtectedRoute>
-            <Layout />
+            <Layout clinic={data.clinic} />
           </ProtectedRoute>
         }
       >
-        <Route path="dashboard" element={<Dashboard patients={patients} />} />
-        <Route path="patients" element={<PatientsList patients={patients} addPatient={addPatient} />} />
-        <Route path="patients/:id" element={<PatientDetail patients={patients} history={history} medications={medications} addVisit={addVisit} />} />
-        <Route path="appointments" element={<div className="page-container animate-fade-in"><h1 className="page-title">Appointments</h1><p className="page-subtitle">This feature is coming soon.</p></div>} />
-        <Route path="settings" element={<div className="page-container animate-fade-in"><h1 className="page-title">Settings</h1><p className="page-subtitle">This feature is coming soon.</p></div>} />
+        <Route path="dashboard" element={<Dashboard data={data} />} />
+        <Route path="patients" element={<PatientsList patients={data.patients} addPatient={actions.addPatient} deletePatient={actions.deletePatient} />} />
+        <Route
+          path="patients/:id"
+          element={(
+            <PatientDetail
+              patients={data.patients}
+              history={data.history}
+              medications={data.medications}
+              appointments={data.appointments}
+              addVisit={actions.addVisit}
+              addMedication={actions.addMedication}
+              updateMedicationStatus={actions.updateMedicationStatus}
+              updatePatient={actions.updatePatient}
+              deletePatient={actions.deletePatient}
+            />
+          )}
+        />
+        <Route
+          path="appointments"
+          element={(
+            <Appointments
+              patients={data.patients}
+              appointments={data.appointments}
+              addAppointment={actions.addAppointment}
+              updateAppointment={actions.updateAppointment}
+              clinic={data.clinic}
+            />
+          )}
+        />
+        <Route
+          path="settings"
+          element={(
+            <Settings
+              clinic={data.clinic}
+              recordCounts={{
+                patients: data.patients.length,
+                appointments: data.appointments.length,
+                history: Object.values(data.history).flat().length,
+                medications: Object.values(data.medications).flat().length
+              }}
+              saveClinic={actions.saveClinic}
+              clearClinicRecords={actions.clearClinicRecords}
+            />
+          )}
+        />
       </Route>
-      
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

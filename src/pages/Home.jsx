@@ -1,9 +1,23 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Stethoscope, Activity, ShieldCheck, ArrowRight, User } from 'lucide-react';
+import { Activity, ArrowRight, CalendarCheck, FileText, Pill, ShieldCheck, Stethoscope, Users } from 'lucide-react';
 
-const Home = () => {
+const Home = ({ data }) => {
   const navigate = useNavigate();
+  const clinic = data?.clinic || {};
+  const clinicName = clinic.name || 'Dental CRM';
+  const totalVisits = Object.values(data?.history || {}).flat().length;
+  const totalMedications = Object.values(data?.medications || {}).flat().length;
+  const nextAppointment = [...(data?.appointments || [])]
+    .filter((appointment) => appointment.status !== 'Cancelled')
+    .sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`))[0];
+
+  const metrics = [
+    { label: 'Patients', value: data?.patients?.length || 0, icon: Users, tone: 'primary' },
+    { label: 'Appointments', value: data?.appointments?.length || 0, icon: CalendarCheck, tone: 'warning' },
+    { label: 'Visit Records', value: totalVisits, icon: FileText, tone: 'success' },
+    { label: 'Medications', value: totalMedications, icon: Pill, tone: 'danger' }
+  ];
 
   return (
     <div className="home-container">
@@ -12,59 +26,96 @@ const Home = () => {
           <div className="logo-icon-wrapper">
             <Stethoscope size={24} />
           </div>
-          <span className="logo-text">NovaDental</span>
+          <span className="logo-text">{clinicName}</span>
         </div>
         <div className="nav-actions">
-          <button className="btn btn-secondary" onClick={() => navigate('/login')}>
-            <User size={16} /> Patient Portal
-          </button>
           <button className="btn btn-primary" onClick={() => navigate('/login')}>
             Admin Login <ArrowRight size={16} />
           </button>
         </div>
       </nav>
 
-      <main className="hero-section">
-        <div className="hero-content animate-fade-in">
-          <div className="badge badge-primary hero-badge">Next-Generation Clinic Management</div>
-          <h1 className="hero-title">
-            Transforming Dental Care <br />
-            <span className="text-gradient">With Intelligent Systems</span>
-          </h1>
-          <p className="hero-description">
-            A comprehensive, secure, and intuitive platform designed to streamline patient records, clinical visits, and medication management for modern dental professionals.
-          </p>
-          <div className="hero-buttons">
-            <button className="btn btn-primary btn-lg" onClick={() => navigate('/login')}>
-              Access Dashboard
-            </button>
-            <button className="btn btn-secondary btn-lg" onClick={() => navigate('/login')}>
-              View Patient Portal
-            </button>
+      <main className="home-main">
+        <section className="home-hero">
+          <div className="hero-copy animate-fade-in">
+            <div className="badge badge-primary hero-badge">Dental CRM Admin Workspace</div>
+            <h1 className="hero-title">
+              Manage every patient visit from one calm, clinical dashboard.
+            </h1>
+            <p className="hero-description">
+              {clinicName} can track patient files, medical history, prescriptions, appointments, and clinic settings in one dynamic workspace.
+            </p>
+            <div className="hero-buttons">
+              <button className="btn btn-primary btn-lg" onClick={() => navigate('/login')}>
+                Access Dashboard <ArrowRight size={18} />
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div className="features-grid animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          <div className="feature-card">
-            <div className="feature-icon bg-primary-light text-primary">
-              <Activity size={24} />
+          <div className="clinic-preview animate-fade-in">
+            <div className="preview-header">
+              <div>
+                <span>Today at {clinicName}</span>
+                <strong>{clinic.openTime || '09:00'} - {clinic.closeTime || '18:00'}</strong>
+              </div>
+              <div className="preview-pulse"><Activity size={18} /></div>
             </div>
-            <h3>Advanced Patient Tracking</h3>
-            <p>Maintain detailed medical histories, track visits, and monitor patient progression seamlessly over time.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon bg-success-light text-success">
-              <ShieldCheck size={24} />
+
+            <div className="preview-metrics">
+              {metrics.map((metric) => {
+                const Icon = metric.icon;
+                return (
+                  <div className="preview-metric" key={metric.label}>
+                    <div className={`metric-icon bg-${metric.tone}-light text-${metric.tone}`}>
+                      <Icon size={18} />
+                    </div>
+                    <strong>{metric.value}</strong>
+                    <span>{metric.label}</span>
+                  </div>
+                );
+              })}
             </div>
-            <h3>Secure & Compliant</h3>
-            <p>Enterprise-grade security ensuring all sensitive medical data is encrypted and strictly protected.</p>
+
+            <div className="preview-panel">
+              <div className="preview-row">
+                <span>Next appointment</span>
+                <strong>{nextAppointment ? `${nextAppointment.date} ${nextAppointment.time}` : 'Not scheduled'}</strong>
+              </div>
+              <div className="preview-row">
+                <span>Default dentist</span>
+                <strong>{clinic.defaultDentist || 'Not set'}</strong>
+              </div>
+              <div className="preview-row">
+                <span>Clinic phone</span>
+                <strong>{clinic.phone || 'Not set'}</strong>
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
+
+        <section className="home-components">
+          <article className="home-component">
+            <div className="component-icon bg-primary-light text-primary"><Users size={22} /></div>
+            <h3>Dynamic Patient Records</h3>
+            <p>Add unlimited patients with contact details, allergies, blood group, emergency contacts, and clinical notes.</p>
+          </article>
+          <article className="home-component">
+            <div className="component-icon bg-success-light text-success"><FileText size={22} /></div>
+            <h3>Visit Timeline</h3>
+            <p>Log procedures, diagnoses, tooth areas, treatment notes, and next steps directly inside each patient file.</p>
+          </article>
+          <article className="home-component">
+            <div className="component-icon bg-warning-light text-warning"><CalendarCheck size={22} /></div>
+            <h3>Appointment Flow</h3>
+            <p>Schedule visits, change status, and keep each appointment connected to the right patient history.</p>
+          </article>
+          <article className="home-component">
+            <div className="component-icon bg-danger-light text-danger"><ShieldCheck size={22} /></div>
+            <h3>Care Safety</h3>
+            <p>Keep allergies, active medications, and care instructions visible before treatment decisions.</p>
+          </article>
+        </section>
       </main>
-
-      {/* Decorative background elements */}
-      <div className="blob blob-1"></div>
-      <div className="blob blob-2"></div>
     </div>
   );
 };

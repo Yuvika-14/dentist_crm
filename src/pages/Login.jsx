@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Stethoscope, Lock, User, ArrowLeft, Loader } from 'lucide-react';
 
-const Login = () => {
+const Login = ({ clinic }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -45,7 +45,7 @@ const Login = () => {
             <Stethoscope size={32} color="var(--primary)" />
           </div>
           <h2>Welcome Back</h2>
-          <p>Sign in to your NovaDental admin account</p>
+          <p>Sign in to {clinic?.name || 'Dental CRM'} admin</p>
         </div>
 
         {error && (

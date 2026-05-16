@@ -3,7 +3,7 @@ import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Users, Calendar, Settings, Stethoscope, Bell, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-const Layout = () => {
+const Layout = ({ clinic }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -28,7 +28,7 @@ const Layout = () => {
           <div className="sidebar-logo-icon">
             <Stethoscope size={24} />
           </div>
-          NovaDental
+          {clinic?.name || 'Dental CRM'}
         </div>
 
         <nav className="nav-links">
@@ -71,7 +71,7 @@ const Layout = () => {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span style={{ fontSize: '14px', fontWeight: 600 }}>{user?.username ? `Dr. ${user.username}` : 'Dr. Admin'}</span>
-              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Head Dentist</span>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{clinic?.defaultDentist || 'Clinic Admin'}</span>
             </div>
           </div>
         </header>
