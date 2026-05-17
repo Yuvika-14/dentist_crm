@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, CalendarCheck, FileText, ShieldCheck, Stethoscope, Users } from 'lucide-react';
+import { ArrowRight, Stethoscope } from 'lucide-react';
 
 const Home = ({ data }) => {
   const navigate = useNavigate();
@@ -26,12 +26,12 @@ const Home = ({ data }) => {
       <main className="home-main">
         <section className="home-hero">
           <div className="hero-copy animate-fade-in">
-            <div className="badge badge-primary hero-badge">Dental CRM Admin Workspace</div>
+            <div className="badge badge-primary hero-badge">Clinical workspace for modern dental teams</div>
             <h1 className="hero-title">
-              Manage every patient visit from one calm, clinical dashboard.
+              Run patient care from one <span className="text-gradient">light, organized CRM.</span>
             </h1>
             <p className="hero-description">
-              {clinicName} can track patient files, medical history, prescriptions, appointments, and clinic settings in one dynamic workspace.
+              {clinicName} can manage patient files, appointments, prescriptions, treatment notes, and clinic settings without losing the calm feel of a well-run practice.
             </p>
             <div className="hero-buttons">
               <button className="btn btn-primary btn-lg" onClick={() => navigate('/login')}>
@@ -48,29 +48,6 @@ const Home = ({ data }) => {
               />
             </div>
           </div>
-        </section>
-
-        <section className="home-components">
-          <article className="home-component">
-            <div className="component-icon bg-primary-light text-primary"><Users size={22} /></div>
-            <h3>Dynamic Patient Records</h3>
-            <p>Add unlimited patients with contact details, allergies, blood group, emergency contacts, and clinical notes.</p>
-          </article>
-          <article className="home-component">
-            <div className="component-icon bg-success-light text-success"><FileText size={22} /></div>
-            <h3>Visit Timeline</h3>
-            <p>Log procedures, diagnoses, tooth areas, treatment notes, and next steps directly inside each patient file.</p>
-          </article>
-          <article className="home-component">
-            <div className="component-icon bg-warning-light text-warning"><CalendarCheck size={22} /></div>
-            <h3>Appointment Flow</h3>
-            <p>Schedule visits, change status, and keep each appointment connected to the right patient history.</p>
-          </article>
-          <article className="home-component">
-            <div className="component-icon bg-danger-light text-danger"><ShieldCheck size={22} /></div>
-            <h3>Care Safety</h3>
-            <p>Keep allergies, active medications, and care instructions visible before treatment decisions.</p>
-          </article>
         </section>
       </main>
     </div>
