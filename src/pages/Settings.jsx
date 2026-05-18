@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Building2, Trash2, Save } from 'lucide-react';
+import { Building2, Clock, Mail, MapPin, Phone, Trash2, Save } from 'lucide-react';
 
 const Settings = ({ clinic, recordCounts, saveClinic, clearClinicRecords }) => {
   const [draft, setDraft] = useState(clinic);
@@ -27,7 +27,7 @@ const Settings = ({ clinic, recordCounts, saveClinic, clearClinicRecords }) => {
       <div className="page-header">
         <div>
           <h1 className="page-title">Settings</h1>
-          <p className="page-subtitle">Configure clinic profile and default scheduling details.</p>
+          <p className="page-subtitle">Configure clinic profile, website footer contact details, and default scheduling.</p>
         </div>
       </div>
 
@@ -78,22 +78,39 @@ const Settings = ({ clinic, recordCounts, saveClinic, clearClinicRecords }) => {
           </div>
         </form>
 
-        <div className="card">
-          <div className="section-heading">
-            <div>
-              <h2>Clinic Records</h2>
-              <p>Your database grows dynamically as you add patients, visits, medications, and appointments.</p>
+        <div className="settings-side-panel">
+          <div className="card">
+            <div className="section-heading">
+              <div>
+                <h2>Footer Contact Preview</h2>
+                <p>Saved clinic details appear on the website footer and map section.</p>
+              </div>
+            </div>
+            <div className="settings-preview-list">
+              <div><MapPin size={18} /><span>{draft.address}</span></div>
+              <a href={`tel:${draft.phone?.replace(/[^\d+]/g, '') || ''}`}><Phone size={18} /><span>{draft.phone}</span></a>
+              <a href={`mailto:${draft.email}`}><Mail size={18} /><span>{draft.email}</span></a>
+              <div><Clock size={18} /><span>{draft.openTime} - {draft.closeTime}</span></div>
             </div>
           </div>
-          <div className="settings-counts">
-            <div><strong>{recordCounts.patients}</strong><span>Patients</span></div>
-            <div><strong>{recordCounts.appointments}</strong><span>Appointments</span></div>
-            <div><strong>{recordCounts.history}</strong><span>Visit records</span></div>
-            <div><strong>{recordCounts.medications}</strong><span>Medications</span></div>
+
+          <div className="card">
+            <div className="section-heading">
+              <div>
+                <h2>Clinic Records</h2>
+                <p>Your database grows dynamically as you add patients, visits, medications, and appointments.</p>
+              </div>
+            </div>
+            <div className="settings-counts">
+              <div><strong>{recordCounts.patients}</strong><span>Patients</span></div>
+              <div><strong>{recordCounts.appointments}</strong><span>Appointments</span></div>
+              <div><strong>{recordCounts.history}</strong><span>Visit records</span></div>
+              <div><strong>{recordCounts.medications}</strong><span>Medications</span></div>
+            </div>
+            <button className="btn btn-danger" type="button" onClick={handleClearRecords}>
+              <Trash2 size={16} /> Clear All Records
+            </button>
           </div>
-          <button className="btn btn-danger" type="button" onClick={handleClearRecords}>
-            <Trash2 size={16} /> Clear All Records
-          </button>
         </div>
       </div>
     </div>

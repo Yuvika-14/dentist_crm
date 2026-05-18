@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Calendar, Settings, Stethoscope, Bell, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, Calendar, Settings, Stethoscope, Bell, LogOut, Pill, UploadCloud } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Layout = ({ clinic }) => {
@@ -12,6 +12,8 @@ const Layout = ({ clinic }) => {
     { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
     { name: 'Patients', path: '/patients', icon: <Users size={20} /> },
     { name: 'Appointments', path: '/appointments', icon: <Calendar size={20} /> },
+    { name: 'Prescriptions', path: '/prescriptions', icon: <Pill size={20} /> },
+    { name: 'Documents', path: '/secure-uploads', icon: <UploadCloud size={20} /> },
     { name: 'Settings', path: '/settings', icon: <Settings size={20} /> },
   ];
 

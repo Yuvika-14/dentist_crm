@@ -8,10 +8,23 @@ const formatDate = (date) => new Date(`${date}T00:00:00`).toLocaleDateString(und
   year: 'numeric'
 });
 
+const formatStatDate = (date) => new Date(`${date}T00:00:00`).toLocaleDateString(undefined, {
+  month: 'short',
+  day: 'numeric'
+});
+
+const getLocalDateKey = () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 const Dashboard = ({ data }) => {
   const navigate = useNavigate();
   const { patients, appointments, medications, history } = data;
-  const today = new Date().toISOString().split('T')[0];
+  const today = getLocalDateKey();
 
   const todayAppointments = appointments
     .filter((appointment) => appointment.date === today && appointment.status !== 'Cancelled')
@@ -69,7 +82,7 @@ const Dashboard = ({ data }) => {
             <h3>{todayAppointments.length}</h3>
             <p>Appointments today</p>
           </div>
-          <span className="badge badge-primary">{formatDate(today)}</span>
+          <span className="badge badge-primary stat-date-badge">{formatStatDate(today)}</span>
         </div>
 
         <div className="card stat-card">

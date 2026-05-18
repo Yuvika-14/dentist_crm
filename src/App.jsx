@@ -8,10 +8,21 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Appointments from './pages/Appointments';
 import Settings from './pages/Settings';
+import Prescriptions from './pages/Prescriptions';
+import SecureUploads from './pages/SecureUploads';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 const STORAGE_KEY = 'novaDentalCrmDataV3';
 const today = new Date().toISOString().split('T')[0];
+const clinicProfile = {
+  name: 'My dentist',
+  phone: '(817) 329-6000',
+  email: 'share@startdentistry.com',
+  address: '2100 W Northwest Hwy #204, Grapevine, TX 76051',
+  openTime: '09:00',
+  closeTime: '18:00',
+  defaultDentist: 'Dr. Milton Dang'
+};
 
 const initialData = {
   patients: [
@@ -133,15 +144,7 @@ const initialData = {
     { id: 3, patientId: 2, date: '2026-05-24', time: '14:30', procedure: 'Aligner progress review', dentist: 'Dr. Smith', status: 'Scheduled', notes: 'Tray 8 fit check.' },
     { id: 4, patientId: 4, date: '2026-06-01', time: '16:00', procedure: 'Sealant review', dentist: 'Dr. Smith', status: 'Scheduled', notes: 'Parent requested late afternoon.' }
   ],
-  clinic: {
-    name: 'NovaDental Clinic',
-    phone: '(555) 700-8844',
-    email: 'frontdesk@novadental.test',
-    address: '24 Care Avenue, Suite 8',
-    openTime: '09:00',
-    closeTime: '18:00',
-    defaultDentist: 'Dr. Smith'
-  }
+  clinic: clinicProfile
 };
 
 const readStoredData = () => {
@@ -151,7 +154,7 @@ const readStoredData = () => {
       return initialData;
     }
 
-    const parsed = { ...initialData, ...JSON.parse(stored) };
+    const parsed = { ...initialData, ...JSON.parse(stored), clinic: clinicProfile };
     return hasDemoRecords(parsed) ? parsed : initialData;
   } catch {
     return initialData;
@@ -340,6 +343,8 @@ function AppContent() {
             />
           )}
         />
+        <Route path="prescriptions" element={<Prescriptions patients={data.patients} medications={data.medications} />} />
+        <Route path="secure-uploads" element={<SecureUploads />} />
         <Route
           path="settings"
           element={(
