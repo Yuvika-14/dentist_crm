@@ -272,6 +272,26 @@ function AppContent() {
         }
       }));
     },
+    updateMedication: (patientId, medicationId, updates) => {
+      setData((current) => ({
+        ...current,
+        medications: {
+          ...current.medications,
+          [patientId]: (current.medications[patientId] || []).map((medication) => (
+            medication.id === medicationId ? { ...medication, ...updates } : medication
+          ))
+        }
+      }));
+    },
+    deleteMedication: (patientId, medicationId) => {
+      setData((current) => ({
+        ...current,
+        medications: {
+          ...current.medications,
+          [patientId]: (current.medications[patientId] || []).filter((medication) => medication.id !== medicationId)
+        }
+      }));
+    },
     addAppointment: (appointment) => {
       setData((current) => ({
         ...current,
@@ -343,7 +363,18 @@ function AppContent() {
             />
           )}
         />
-        <Route path="prescriptions" element={<Prescriptions patients={data.patients} medications={data.medications} />} />
+        <Route
+          path="prescriptions"
+          element={(
+            <Prescriptions
+              patients={data.patients}
+              medications={data.medications}
+              addMedication={actions.addMedication}
+              updateMedication={actions.updateMedication}
+              deleteMedication={actions.deleteMedication}
+            />
+          )}
+        />
         <Route path="secure-uploads" element={<SecureUploads />} />
         <Route
           path="settings"

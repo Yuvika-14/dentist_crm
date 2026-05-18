@@ -2602,6 +2602,115 @@ ul {
   color: var(--text-muted);
 }
 
+.prescription-instruction-modal {
+  width: min(780px, calc(100vw - 48px));
+  max-height: calc(100vh - 96px);
+  padding: 26px;
+  overflow-y: auto;
+}
+
+.prescription-form-modal {
+  width: min(720px, calc(100vw - 48px));
+  max-height: calc(100vh - 96px);
+  padding: 26px;
+  overflow-y: auto;
+}
+
+.prescription-form-modal .modal-header {
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.prescription-form {
+  display: grid;
+  gap: 16px;
+}
+
+.prescription-form .form-grid {
+  gap: 14px;
+}
+
+.prescription-form .input-label {
+  margin-bottom: 7px;
+  font-size: 13px;
+}
+
+.prescription-form .input-field {
+  min-height: 46px;
+  padding: 11px 14px;
+}
+
+.prescription-form .text-area {
+  min-height: 104px;
+}
+
+.prescription-form .modal-actions {
+  margin-top: 6px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.prescription-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.instruction-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  margin-bottom: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, rgba(224, 242, 242, 0.72), rgba(255, 255, 255, 0.96));
+}
+
+.instruction-hero strong,
+.instruction-hero span {
+  display: block;
+}
+
+.instruction-hero strong {
+  color: var(--text-main);
+  font-size: 20px;
+}
+
+.instruction-hero span {
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.instruction-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding-bottom: 2px;
+}
+
+.instruction-grid article {
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(180deg, #ffffff, #fbfdff);
+}
+
+.instruction-grid h3 {
+  margin-bottom: 9px;
+  color: var(--text-main);
+  font-size: 15px;
+}
+
+.instruction-grid p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
 .secure-upload-grid {
   grid-template-columns: minmax(320px, 1.1fr) minmax(320px, 0.9fr);
 }
@@ -2835,6 +2944,30 @@ ul {
   .document-preview-stage {
     height: calc(100% - 74px);
     padding: 8px;
+  }
+
+  .instruction-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .prescription-instruction-modal {
+    width: calc(100vw - 24px);
+    max-height: calc(100vh - 48px);
+    padding: 20px;
+  }
+
+  .prescription-form-modal {
+    width: calc(100vw - 24px);
+    max-height: calc(100vh - 48px);
+    padding: 20px;
+  }
+
+  .prescription-form .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .instruction-hero {
+    align-items: flex-start;
   }
 }
 

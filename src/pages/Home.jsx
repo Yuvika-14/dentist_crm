@@ -41,7 +41,7 @@ const Home = ({ data }) => {
     {
       icon: <Pill size={24} />,
       title: 'Smart Prescriptions',
-      text: 'Generate, track, and send digital prescriptions while keeping allergy warnings visible.'
+      text: 'Prepare, review, and track prescription care plans while keeping allergy warnings visible.'
     },
     {
       icon: <SmilePlus size={24} />,
@@ -177,7 +177,7 @@ const Home = ({ data }) => {
           <div className="workflow-steps">
             <article><strong>1</strong><h3>Quick Intake</h3><p>Onboard a new patient via a digital form in under 2 minutes.</p></article>
             <article><strong>2</strong><h3>Real-time Charting</h3><p>Update treatment notes and medical history mid-appointment seamlessly.</p></article>
-            <article><strong>3</strong><h3>Automated Follow-ups</h3><p>Send prescriptions and next-appointment reminders automatically.</p></article>
+            <article><strong>3</strong><h3>Care Follow-ups</h3><p>Prepare medication instructions and next-appointment reminders from one workflow.</p></article>
           </div>
         </section>
 
@@ -185,11 +185,11 @@ const Home = ({ data }) => {
           <div className="homepage-section-heading">
             <span className="section-kicker">Interactive Product Walkthrough</span>
             <h2>The software itself is the hero</h2>
-            <p>Doctors can scan the patient timeline, update treatment plans, send prescriptions, and review secure uploads from one workspace.</p>
+            <p>Doctors can scan the patient timeline, update treatment plans, prepare prescription instructions, and review secure uploads from one workspace.</p>
           </div>
           <div className="walkthrough-grid">
             <article><CalendarCheck size={22} /><h3>Patient Timeline</h3><p>Chronological visits, procedures, prescriptions, and document activity.</p></article>
-            <article><Pill size={22} /><h3>Prescription Queue</h3><p>Track status and send medication instructions without switching tools.</p></article>
+            <article><Pill size={22} /><h3>Prescription Queue</h3><p>Track status and prepare medication instructions without switching tools.</p></article>
             <article><UploadCloud size={22} /><h3>Secure Upload Vault</h3><p>Link encrypted X-rays, lab reports, and forms to patient records.</p></article>
           </div>
         </section>

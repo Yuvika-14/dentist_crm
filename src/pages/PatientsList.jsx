@@ -133,9 +133,7 @@ const PatientsList = ({ patients, addPatient, deletePatient }) => {
           <p className="page-subtitle">Maintain patient profiles, medical risks, contact details, and follow-up dates.</p>
         </div>
         <div className="dashboard-hero-actions">
-          <button className="btn btn-secondary" onClick={() => setSearchTerm('')}>
-            Clear Search
-          </button>
+          
           <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
             <Plus size={18} /> Add Patient
           </button>
