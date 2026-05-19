@@ -24,14 +24,14 @@ const Home = ({ data }) => {
     name: 'My dentist',
     phone: '(817) 329-6000',
     email: 'share@startdentistry.com',
-    address: '2100 W Northwest Hwy #204, Grapevine, TX 76051',
+    address: 'Rajendra market, Parsa sampatchak road, purani, near Annie Besant school, Parsa Bazar, Patna, Bihar 804453',
     ...(data?.clinic || {})
   };
   const clinicName = clinic.name || 'My dentist';
   const phone = clinic.phone || '(817) 329-6000';
   const email = clinic.email || 'share@startdentistry.com';
-  const address = clinic.address || '2100 W Northwest Hwy #204, Grapevine, TX 76051';
-  const mapQuery = encodeURIComponent(address);
+  const address = clinic.address || 'Rajendra market, Parsa sampatchak road, purani, near Annie Besant school, Parsa Bazar, Patna, Bihar 804453';
+  const mapQuery = encodeURIComponent(`${clinicName.toUpperCase()}, ${address}`);
   const featureCards = [
     {
       icon: <FileText size={24} />,
@@ -96,43 +96,11 @@ const Home = ({ data }) => {
           </div>
 
           <div className="hero-visual animate-fade-in">
-            <div className="patient-dashboard-loop hero-patient-loop" aria-label="Looping patient dashboard demo">
-              <div className="loop-window-bar">
-                <span></span><span></span><span></span>
-                <strong>Patients Dashboard</strong>
-                <em>Looping demo</em>
-              </div>
-              <div className="loop-dashboard-screen">
-                <aside>
-                  <b>MD</b>
-                  <span className="active">Patients</span>
-                  <span>Appointments</span>
-                  <span>Prescriptions</span>
-                  <span>Settings</span>
-                </aside>
-                <section>
-                  <div className="loop-demo-cursor" aria-hidden="true"></div>
-                  <div className="loop-demo-header">
-                    <div>
-                      <small>Patient command center</small>
-                      <h3>Patient Directory</h3>
-                      <p>Profiles, visits, risks, and follow-ups in one view.</p>
-                    </div>
-                    <button type="button">Add Patient</button>
-                  </div>
-                  <div className="loop-demo-stats">
-                    <article><strong>5</strong><span>Total patients</span></article>
-                    <article><strong>2</strong><span>Upcoming visits</span></article>
-                    <article><strong>3</strong><span>Allergy flags</span></article>
-                  </div>
-                  <div className="loop-demo-search">Search by name, phone, email, or treatment status...</div>
-                  <div className="loop-demo-table">
-                    <div><strong>Aarav Mehta</strong><span>Root canal follow-up</span><em>Active</em></div>
-                    <div><strong>Sofia Rivera</strong><span>Periodontal maintenance</span><em>Review</em></div>
-                    <div><strong>Emma Wilson</strong><span>Crown review</span><em>Checked in</em></div>
-                  </div>
-                </section>
-              </div>
+            <div className="dental-photo-card" aria-label="Modern dental clinic room">
+              <img
+                src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=85"
+                alt="Modern dental clinic room with dental chair and equipment"
+              />
             </div>
           </div>
         </section>
@@ -230,7 +198,7 @@ const Home = ({ data }) => {
               <span className="logo-text">{clinicName}</span>
             </div>
             <p>
-              Family dental care in Grapevine, Texas with a calm, organized clinical workflow for every visit.
+              Family dental care in Parsa Bazar, Patna with a calm, organized clinical workflow for every visit.
             </p>
           </div>
 

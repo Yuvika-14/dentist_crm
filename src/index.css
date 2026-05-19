@@ -2658,6 +2658,17 @@ ul {
   flex-wrap: wrap;
 }
 
+.prescription-delete-btn {
+  width: 32px;
+  height: 32px;
+  color: var(--danger);
+}
+
+.prescription-delete-btn:hover {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
 .instruction-hero {
   display: flex;
   align-items: center;

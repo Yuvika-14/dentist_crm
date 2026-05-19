@@ -18,7 +18,7 @@ const clinicProfile = {
   name: 'My dentist',
   phone: '(817) 329-6000',
   email: 'share@startdentistry.com',
-  address: '2100 W Northwest Hwy #204, Grapevine, TX 76051',
+  address: 'Rajendra market, Parsa sampatchak road, purani, near Annie Besant school, Parsa Bazar, Patna, Bihar 804453',
   openTime: '09:00',
   closeTime: '18:00',
   defaultDentist: 'Dr. Milton Dang'
