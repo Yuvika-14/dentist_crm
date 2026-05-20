@@ -8,6 +8,8 @@ import {
   DatabaseBackup,
   FileCheck2,
   FileText,
+  Instagram,
+  Linkedin,
   Menu,
   LockKeyhole,
   Mail,
@@ -15,10 +17,11 @@ import {
   Phone,
   Pill,
   ShieldCheck,
-  SmilePlus,
+  Star,
   Stethoscope,
   UploadCloud,
-  X
+  X,
+  Youtube
 } from 'lucide-react';
 
 const Home = ({ data }) => {
@@ -56,7 +59,7 @@ const Home = ({ data }) => {
       text: 'Prepare, review, and track prescription care plans while keeping allergy warnings visible.'
     },
     {
-      icon: <SmilePlus size={24} />,
+      icon: <FileCheck2 size={24} />,
       title: 'Visual Treatment Planning',
       text: 'Map fillings, root canals, extractions, and follow-up procedures on a clear care timeline.'
     },
@@ -88,7 +91,9 @@ const Home = ({ data }) => {
     event.preventDefault();
     const target = document.querySelector(href);
     if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const offset = 104;
+      const targetTop = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top: Math.max(targetTop, 0), behavior: 'smooth' });
     }
     setMenuOpen(false);
   };
@@ -160,7 +165,7 @@ const Home = ({ data }) => {
 
         <section className="homepage-section" id="features">
           <div className="homepage-section-heading">
-            <span className="section-kicker">Features & Capabilities</span>
+            <span className="section-kicker">Features and Capabilities</span>
             <h2>Everything the clinic team needs to manage care</h2>
             <p>Built around records, prescriptions, treatment planning, and secure documents.</p>
           </div>
@@ -181,27 +186,48 @@ const Home = ({ data }) => {
             <h2>A simple clinical workflow from intake to follow-up</h2>
           </div>
           <div className="workflow-steps">
+            <div className="workflow-rail-arrows" aria-hidden="true">
+              <ArrowRight size={24} />
+              <ArrowRight size={24} />
+            </div>
             {workflowSteps.map((step, index) => (
               <article key={step.title} style={{ '--step-index': index }}>
                 <strong>{index + 1}</strong>
                 <h3>{step.title}</h3>
                 <p>{step.text}</p>
-                {index < workflowSteps.length - 1 && <ArrowRight className="workflow-arrow" size={24} />}
               </article>
             ))}
           </div>
         </section>
 
         <section className="homepage-section product-walkthrough" id="pricing">
-          <div className="homepage-section-heading">
-            <span className="section-kicker">Interactive Product Walkthrough</span>
-            <h2>The software itself is the hero</h2>
-            <p>Doctors can scan the patient timeline, update treatment plans, prepare prescription instructions, and review secure uploads from one workspace.</p>
-          </div>
-          <div className="walkthrough-grid">
-            <article><span><CalendarCheck size={22} /></span><h3>Patient Timeline</h3><p>Chronological visits, procedures, prescriptions, and document activity.</p></article>
-            <article><span><Pill size={22} /></span><h3>Prescription Queue</h3><p>Track status and prepare medication instructions without switching tools.</p></article>
-            <article><span><UploadCloud size={22} /></span><h3>Secure Upload Vault</h3><p>Link encrypted X-rays, lab reports, and forms to patient records.</p></article>
+          <div className="product-walkthrough-shell">
+            <div className="homepage-section-heading">
+              <span className="section-kicker">Interactive Product Walkthrough</span>
+              <h2>The software itself is the hero</h2>
+              <p>Doctors can scan the patient timeline, update treatment plans, prepare prescription instructions, and review secure uploads from one workspace.</p>
+            </div>
+            <div className="product-flow-panel" aria-hidden="true">
+              <div className="product-flow-header">
+                <span>Patient workspace</span>
+                <strong>Live care view</strong>
+              </div>
+              <div className="product-flow-line">
+                <span style={{ '--flow-step': 0 }}><CalendarCheck size={18} /></span>
+                <span style={{ '--flow-step': 1 }}><Pill size={18} /></span>
+                <span style={{ '--flow-step': 2 }}><UploadCloud size={18} /></span>
+              </div>
+              <div className="product-flow-table">
+                <span>Timeline updated</span>
+                <span>Prescription queued</span>
+                <span>Documents secured</span>
+              </div>
+            </div>
+            <div className="walkthrough-grid">
+              <article><span><CalendarCheck size={22} /></span><h3>Patient Timeline</h3><p>Chronological visits, procedures, prescriptions, and document activity.</p></article>
+              <article><span><Pill size={22} /></span><h3>Prescription Queue</h3><p>Track status and prepare medication instructions without switching tools.</p></article>
+              <article><span><UploadCloud size={22} /></span><h3>Secure Upload Vault</h3><p>Link encrypted X-rays, lab reports, and forms to patient records.</p></article>
+            </div>
           </div>
         </section>
 
@@ -227,14 +253,21 @@ const Home = ({ data }) => {
             <button type="button" className="carousel-control" aria-label="Previous review" onClick={() => changeReview(-1)}>
               <ChevronLeft size={20} />
             </button>
-            <div className="testimonial-track" style={{ transform: `translateX(-${activeReview * 100}%)` }}>
-              {reviews.map((review) => (
-                <article className="testimonial-slide" key={review.name}>
-                  <p>"{review.quote}"</p>
-                  <strong>{review.name}</strong>
-                  <span>{review.role}</span>
-                </article>
-              ))}
+            <div className="testimonial-viewport">
+              <div className="testimonial-track" style={{ transform: `translateX(-${activeReview * 100}%)` }}>
+                {reviews.map((review) => (
+                  <article className="testimonial-slide" key={review.name}>
+                    <div className="testimonial-stars" aria-label="Five star review">
+                      {Array.from({ length: 5 }).map((_, starIndex) => (
+                        <Star key={starIndex} size={18} fill="currentColor" />
+                      ))}
+                    </div>
+                    <p>"{review.quote}"</p>
+                    <strong>{review.name}</strong>
+                    <span>{review.role}</span>
+                  </article>
+                ))}
+              </div>
             </div>
             <button type="button" className="carousel-control" aria-label="Next review" onClick={() => changeReview(1)}>
               <ChevronRight size={20} />
@@ -266,6 +299,11 @@ const Home = ({ data }) => {
             <p>
               Family dental care in Parsa Bazar, Patna with a calm, organized clinical workflow for every visit.
             </p>
+            <div className="footer-socials" aria-label="Social links">
+              <a href="#home" aria-label="LinkedIn"><Linkedin size={18} /></a>
+              <a href="#home" aria-label="Instagram"><Instagram size={18} /></a>
+              <a href="#home" aria-label="YouTube"><Youtube size={18} /></a>
+            </div>
           </div>
 
           <div className="footer-contact">
