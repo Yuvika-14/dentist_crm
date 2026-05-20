@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
   CalendarCheck,
-  Clock,
+  ChevronLeft,
+  ChevronRight,
   DatabaseBackup,
   FileCheck2,
   FileText,
+  Menu,
   LockKeyhole,
   Mail,
   MapPin,
@@ -15,11 +17,14 @@ import {
   ShieldCheck,
   SmilePlus,
   Stethoscope,
-  UploadCloud
+  UploadCloud,
+  X
 } from 'lucide-react';
 
 const Home = ({ data }) => {
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeReview, setActiveReview] = useState(0);
   const clinic = {
     name: 'My dentist',
     phone: '(817) 329-6000',
@@ -31,7 +36,14 @@ const Home = ({ data }) => {
   const phone = clinic.phone || '(817) 329-6000';
   const email = clinic.email || 'share@startdentistry.com';
   const address = clinic.address || 'Rajendra market, Parsa sampatchak road, purani, near Annie Besant school, Parsa Bazar, Patna, Bihar 804453';
-  const mapQuery = encodeURIComponent(`${clinicName.toUpperCase()}, ${address}`);
+  const navLinks = [
+    { label: 'Home', href: '#home' },
+    { label: 'Features', href: '#features' },
+    { label: 'Workflow', href: '#workflow' },
+    { label: 'Reviews', href: '#reviews' },
+    { label: 'Pricing', href: '#pricing' },
+    { label: 'Contact', href: '#contact' }
+  ];
   const featureCards = [
     {
       icon: <FileText size={24} />,
@@ -54,22 +66,61 @@ const Home = ({ data }) => {
       text: 'Store X-rays, lab reports, intake forms, and consent PDFs in an encrypted cloud vault.'
     }
   ];
+  const workflowSteps = [
+    { title: 'Quick Intake', text: 'Onboard a new patient via a digital form in under 2 minutes.' },
+    { title: 'Real-time Charting', text: 'Update treatment notes and medical history mid-appointment seamlessly.' },
+    { title: 'Care Follow-ups', text: 'Prepare medication instructions and next-appointment reminders from one workflow.' }
+  ];
+  const reviews = [
+    { quote: 'My dentist cut our administrative charting time in half.', name: 'Dr. Sarah Jenkins', role: 'Lead Dentist' },
+    { quote: 'The patient timeline helps doctors understand a case before entering the room.', name: 'Priya Mehta', role: 'Clinic Administrator' },
+    { quote: 'Prescriptions and document uploads finally feel connected to treatment planning.', name: 'Dr. Mateo Ruiz', role: 'Endodontist' }
+  ];
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveReview((current) => (current + 1) % reviews.length);
+    }, 4200);
+    return () => window.clearInterval(timer);
+  }, [reviews.length]);
+
+  const scrollToSection = (event, href) => {
+    event.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    setMenuOpen(false);
+  };
+
+  const changeReview = (direction) => {
+    setActiveReview((current) => (current + direction + reviews.length) % reviews.length);
+  };
 
   return (
     <div className="home-container">
-      <nav className="home-nav">
+      <nav className="home-nav" id="home">
         <div className="logo-brand">
           <div className="logo-icon-wrapper">
             <Stethoscope size={24} />
           </div>
           <span className="logo-text">{clinicName}</span>
         </div>
-        <div className="home-nav-links">
-          <a href="#features">Features</a>
-          <a href="#workflow">Workflow</a>
-          <a href="#contact">Contact us</a>
-          <a href="#security">Security</a>
-          <a href="#contact">Location</a>
+        <button
+          className="mobile-menu-toggle"
+          type="button"
+          aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          {menuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+        <div className={`home-nav-links ${menuOpen ? 'is-open' : ''}`}>
+          {navLinks.map((link) => (
+            <a key={link.href} href={link.href} onClick={(event) => scrollToSection(event, link.href)}>
+              {link.label}
+            </a>
+          ))}
         </div>
         <div className="nav-actions">
           <button className="btn btn-primary" onClick={() => navigate('/login')}>
@@ -105,20 +156,7 @@ const Home = ({ data }) => {
           </div>
         </section>
 
-        <section className="home-info-strip" aria-label="Clinic highlights">
-          <div>
-            <ShieldCheck size={20} />
-            <span>Family Dentistry</span>
-          </div>
-          <div>
-            <Clock size={20} />
-            <span>Evening & Weekend Hours</span>
-          </div>
-          <div>
-            <Stethoscope size={20} />
-            <span>Complete Dental Care</span>
-          </div>
-        </section>
+      
 
         <section className="homepage-section" id="features">
           <div className="homepage-section-heading">
@@ -143,22 +181,27 @@ const Home = ({ data }) => {
             <h2>A simple clinical workflow from intake to follow-up</h2>
           </div>
           <div className="workflow-steps">
-            <article><strong>1</strong><h3>Quick Intake</h3><p>Onboard a new patient via a digital form in under 2 minutes.</p></article>
-            <article><strong>2</strong><h3>Real-time Charting</h3><p>Update treatment notes and medical history mid-appointment seamlessly.</p></article>
-            <article><strong>3</strong><h3>Care Follow-ups</h3><p>Prepare medication instructions and next-appointment reminders from one workflow.</p></article>
+            {workflowSteps.map((step, index) => (
+              <article key={step.title} style={{ '--step-index': index }}>
+                <strong>{index + 1}</strong>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+                {index < workflowSteps.length - 1 && <ArrowRight className="workflow-arrow" size={24} />}
+              </article>
+            ))}
           </div>
         </section>
 
-        <section className="homepage-section product-walkthrough" id="walkthrough">
+        <section className="homepage-section product-walkthrough" id="pricing">
           <div className="homepage-section-heading">
             <span className="section-kicker">Interactive Product Walkthrough</span>
             <h2>The software itself is the hero</h2>
             <p>Doctors can scan the patient timeline, update treatment plans, prepare prescription instructions, and review secure uploads from one workspace.</p>
           </div>
           <div className="walkthrough-grid">
-            <article><CalendarCheck size={22} /><h3>Patient Timeline</h3><p>Chronological visits, procedures, prescriptions, and document activity.</p></article>
-            <article><Pill size={22} /><h3>Prescription Queue</h3><p>Track status and prepare medication instructions without switching tools.</p></article>
-            <article><UploadCloud size={22} /><h3>Secure Upload Vault</h3><p>Link encrypted X-rays, lab reports, and forms to patient records.</p></article>
+            <article><span><CalendarCheck size={22} /></span><h3>Patient Timeline</h3><p>Chronological visits, procedures, prescriptions, and document activity.</p></article>
+            <article><span><Pill size={22} /></span><h3>Prescription Queue</h3><p>Track status and prepare medication instructions without switching tools.</p></article>
+            <article><span><UploadCloud size={22} /></span><h3>Secure Upload Vault</h3><p>Link encrypted X-rays, lab reports, and forms to patient records.</p></article>
           </div>
         </section>
 
@@ -175,15 +218,38 @@ const Home = ({ data }) => {
           </div>
         </section>
 
-        <section className="homepage-section testimonials-section">
+        <section className="homepage-section testimonials-section" id="reviews">
           <div className="homepage-section-heading">
-            <span className="section-kicker">Social Proof</span>
+            <span className="section-kicker">Patient Reviews</span>
             <h2>Trusted by busy dental teams</h2>
           </div>
-          <div className="testimonial-grid">
-            <article><p>"My dentist cut our administrative charting time in half."</p><strong>Dr. Sarah Jenkins</strong><span>Lead Dentist</span></article>
-            <article><p>"The patient timeline helps doctors understand a case before entering the room."</p><strong>Priya Mehta</strong><span>Clinic Administrator</span></article>
-            <article><p>"Prescriptions and document uploads finally feel connected to treatment planning."</p><strong>Dr. Mateo Ruiz</strong><span>Endodontist</span></article>
+          <div className="testimonial-carousel" aria-live="polite">
+            <button type="button" className="carousel-control" aria-label="Previous review" onClick={() => changeReview(-1)}>
+              <ChevronLeft size={20} />
+            </button>
+            <div className="testimonial-track" style={{ transform: `translateX(-${activeReview * 100}%)` }}>
+              {reviews.map((review) => (
+                <article className="testimonial-slide" key={review.name}>
+                  <p>"{review.quote}"</p>
+                  <strong>{review.name}</strong>
+                  <span>{review.role}</span>
+                </article>
+              ))}
+            </div>
+            <button type="button" className="carousel-control" aria-label="Next review" onClick={() => changeReview(1)}>
+              <ChevronRight size={20} />
+            </button>
+          </div>
+          <div className="carousel-dots" aria-label="Review carousel position">
+            {reviews.map((review, index) => (
+              <button
+                type="button"
+                key={review.name}
+                className={index === activeReview ? 'active' : ''}
+                aria-label={`Show review ${index + 1}`}
+                onClick={() => setActiveReview(index)}
+              />
+            ))}
           </div>
         </section>
       </main>
@@ -204,7 +270,7 @@ const Home = ({ data }) => {
 
           <div className="footer-contact">
             <h2>Visit {clinicName}</h2>
-            <a href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} target="_blank" rel="noreferrer">
+            <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${clinicName.toUpperCase()}, ${address}`)}`} target="_blank" rel="noreferrer">
               <MapPin size={18} />
               <span>{address}</span>
             </a>
@@ -218,24 +284,20 @@ const Home = ({ data }) => {
             </a>
           </div>
 
-          <div className="footer-map" aria-label={`${clinicName} location map`}>
-            <div className="footer-map-fallback">
-              <MapPin size={22} />
-              <strong>Map loading</strong>
-              <span>{address}</span>
-            </div>
-            <iframe
-              title={`${clinicName} location map`}
-              src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
-              loading="lazy"
-              allowFullScreen
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+          <div className="footer-link-groups">
+            <nav aria-label="Footer navigation">
+              <h3>Navigation</h3>
+              {navLinks.map((link) => (
+                <a key={link.href} href={link.href} onClick={(event) => scrollToSection(event, link.href)}>
+                  {link.label}
+                </a>
+              ))}
+            </nav>
           </div>
         </div>
         <div className="footer-bottom">
           <span>Copyright 2026 {clinicName}. All rights reserved.</span>
-          <span>Secure dental CRM for records, visits, prescriptions, and patient documents.</span>
+          <span>Developed by NS Apps Innovation.</span>
         </div>
       </footer>
     </div>
