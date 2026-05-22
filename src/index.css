@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --primary: #2f6f68;      /* Muted teal green */
   --primary-hover: #285f59;
@@ -505,6 +509,7 @@ ul {
   .home-hero {
     min-height: auto;
     gap: 32px;
+    padding: 0 32px;
   }
 
   .hero-copy {
@@ -639,6 +644,15 @@ ul {
   }
 }
 
+/* Shared Container Utility for Perfect Grid Alignment */
+.section-container {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  width: 100%;
+}
+
 /* Home & Landing Page Styles */
 .home-container {
   min-height: 100vh;
@@ -648,11 +662,7 @@ ul {
 }
 
 .home-container::before {
-  content: '';
-  position: absolute;
-  inset: 116px 0 auto;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(47, 111, 104, 0.18), transparent);
+  display: none;
 }
 
 .home-nav {
@@ -668,7 +678,7 @@ ul {
   z-index: 10;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.76);
+  border-bottom: none;
 }
 
 .logo-brand {
@@ -748,7 +758,7 @@ ul {
 }
 
 .home-main {
-  padding: 64px 32px 88px;
+  padding: 24px 32px 48px;
   max-width: 1300px;
   margin: 0 auto;
   position: relative;
@@ -756,11 +766,16 @@ ul {
 }
 
 .home-hero {
-  min-height: calc(100vh - 148px);
+  min-height: auto;
   display: grid;
   grid-template-columns: minmax(440px, 0.78fr) minmax(520px, 1fr);
   align-items: center;
   gap: 76px;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 40px 0 60px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .hero-copy {
@@ -933,6 +948,7 @@ ul {
   align-items: center;
 }
 
+.avatar-stack img,
 .avatar-stack span {
   width: 42px;
   height: 42px;
@@ -946,8 +962,10 @@ ul {
   background: #cfe2de;
   font-size: 12px;
   font-weight: 800;
+  object-fit: cover;
 }
 
+.avatar-stack img:first-child,
 .avatar-stack span:first-child {
   margin-left: 0;
 }
@@ -1123,7 +1141,7 @@ ul {
 }
 
 .home-footer {
-  padding: 68px 32px 32px;
+  padding: 68px 0 32px;
   background: #ffffff;
   border-top: 1px solid rgba(47, 111, 104, 0.1);
   color: var(--text-main);
@@ -1940,13 +1958,12 @@ ul {
 }
 
 .patients-table-container .table-actions {
-  align-items: stretch;
-  flex-direction: column;
+  align-items: center;
+  flex-direction: row;
 }
 
 .patients-table-container .table-actions .btn {
   justify-content: center;
-  min-width: 92px;
 }
 
 /* CRM homepage additions */
@@ -2456,6 +2473,11 @@ ul {
   transition: transform 0.25s ease;
 }
 
+.product-walkthrough .walkthrough-grid {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+}
+
 .walkthrough-grid article:hover {
   transform: translateY(-4px);
 }
@@ -2536,6 +2558,7 @@ ul {
   background: linear-gradient(90deg, transparent, rgba(47, 111, 104, 0.08), transparent);
   transform: translateX(-100%);
   animation: productSweep 5.6s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .product-flow-header {
@@ -2599,6 +2622,7 @@ ul {
   border-radius: 16px;
   animation: productStepPulse 5.6s ease-in-out infinite;
   animation-delay: calc(var(--flow-step) * 0.5s);
+  will-change: transform;
 }
 
 .product-flow-table {
@@ -2615,6 +2639,7 @@ ul {
   border-radius: 8px;
   font-weight: 700;
   animation: productRowFocus 5.6s ease-in-out infinite;
+  transition: background 0.25s ease, color 0.25s ease;
 }
 
 .product-flow-table span:nth-child(2) {
@@ -2639,7 +2664,7 @@ ul {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 42px;
   position: relative;
-  padding-top: 22px;
+  padding-top: 24px;
 }
 
 .workflow-steps::before {
@@ -2650,6 +2675,7 @@ ul {
   right: 8%;
   height: 2px;
   background: rgba(47, 111, 104, 0.18);
+  z-index: 0;
 }
 
 .workflow-steps::after {
@@ -2659,17 +2685,19 @@ ul {
   left: 8%;
   right: 8%;
   height: 2px;
-  background: linear-gradient(90deg, var(--primary), #7bb6ae);
-  transform-origin: left;
-  animation: workflowLineGrow 5.2s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+  background: linear-gradient(90deg, transparent, var(--primary), #8dbeb7, transparent);
+  background-size: 180% 100%;
+  opacity: 0.95;
+  animation: workflowLineShimmer 4.8s ease-in-out infinite;
+  z-index: 0;
 }
 
 .workflow-rail-arrows {
   position: absolute;
-  top: 38px;
+  top: 39px;
   left: 8%;
   right: 8%;
-  z-index: 3;
+  z-index: 1;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   pointer-events: none;
@@ -2678,28 +2706,29 @@ ul {
 .workflow-rail-arrows svg {
   color: var(--primary);
   justify-self: center;
-  animation: workflowArrowMove 5.2s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+  animation: workflowArrowPulse 4.8s ease-in-out infinite;
 }
 
 .workflow-rail-arrows svg:nth-child(2) {
-  animation-delay: 0.62s;
+  animation-delay: 0.8s;
 }
 
 .workflow-steps article {
   position: relative;
   min-width: 0;
-  padding: 88px 8px 0 0;
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  animation: workflowItemReveal 5.2s cubic-bezier(0.45, 0, 0.2, 1) infinite;
-  animation-delay: calc(var(--step-index) * 0.62s);
-  transition: transform 0.25s ease;
+  min-height: 230px;
+  padding: 94px 26px 26px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(47, 111, 104, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.035);
+  transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
 }
 
 .workflow-steps article:hover {
   transform: translateY(-4px);
+  border-color: rgba(47, 111, 104, 0.2);
+  background: rgba(255, 255, 255, 0.94);
 }
 
 .workflow-steps strong {
@@ -2709,15 +2738,15 @@ ul {
   place-items: center;
   position: absolute;
   top: 0;
-  left: 0;
+  left: 26px;
   color: white;
   background: var(--primary);
   border-radius: 50%;
   font-size: 20px;
-  z-index: 1;
+  z-index: 2;
   box-shadow: 0 0 0 12px #eef7f5;
-  animation: workflowNumberPulse 5.2s ease-in-out infinite;
-  animation-delay: calc(var(--step-index) * 0.62s);
+  animation: workflowNumberPulse 4.8s ease-in-out infinite;
+  animation-delay: calc(var(--step-index) * 0.55s);
 }
 
 .workflow-arrow {
@@ -2734,8 +2763,8 @@ ul {
   grid-template-columns: minmax(280px, 0.9fr) minmax(360px, 1.1fr);
   gap: 28px;
   align-items: center;
-  margin-top: 78px;
-  padding: 42px;
+  margin-top: 40px;
+  padding: 32px 42px;
   color: white;
   background:
     radial-gradient(circle at 78% 24%, rgba(125, 224, 183, 0.15), transparent 32%),
@@ -2790,10 +2819,10 @@ ul {
 }
 
 .testimonials-section {
-  margin-top: 112px;
-  padding: 108px 0;
-  background: linear-gradient(180deg, rgba(246, 250, 249, 0.8), rgba(255, 255, 255, 0.96));
-  border-block: 1px solid rgba(47, 111, 104, 0.08);
+  margin-top: 40px;
+  padding: 60px 0;
+  background: transparent;
+  border-block: none;
 }
 
 .testimonials-section .homepage-section-heading {
@@ -2918,18 +2947,12 @@ ul {
   }
 }
 
-@keyframes workflowItemReveal {
-  0%, 9% {
-    opacity: 0;
-    transform: translateY(14px);
+@keyframes workflowLineShimmer {
+  0%, 100% {
+    background-position: 100% 0;
   }
-  24%, 82% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
+  50% {
+    background-position: 0 0;
   }
 }
 
@@ -2942,18 +2965,14 @@ ul {
   }
 }
 
-@keyframes workflowArrowMove {
-  0%, 16% {
-    opacity: 0;
-    transform: translateX(-14px);
+@keyframes workflowArrowPulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: translateX(-2px);
   }
-  34%, 64% {
+  50% {
     opacity: 1;
-    transform: translateX(10px);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(18px);
+    transform: translateX(5px);
   }
 }
 
@@ -3495,6 +3514,7 @@ ul {
   .home-hero {
     min-height: auto;
     gap: 42px;
+    padding: 0 24px;
   }
 
   .hero-copy {
@@ -3548,14 +3568,20 @@ ul {
   }
 
   .workflow-steps article {
+    min-height: auto;
     padding: 0 0 0 78px;
-    animation-duration: 0.72s;
-    animation-iteration-count: 1;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
   }
 
   .workflow-steps strong {
     top: 0;
     left: 0;
+  }
+
+  .workflow-steps {
+    gap: 34px;
   }
 
   .product-walkthrough-shell {
@@ -3728,6 +3754,10 @@ ul {
 
   .home-main {
     padding-inline: 16px;
+  }
+
+  .home-hero {
+    padding: 0 16px !important;
   }
 
   .homepage-section,
@@ -4110,5 +4140,42 @@ ul {
 
   .showcase-metrics div {
     min-height: 92px;
+  }
+}
+
+/* Password Visibility Toggle Styles */
+.password-toggle-btn {
+  position: absolute;
+  right: 14px;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.password-toggle-btn:hover {
+  color: var(--primary);
+}
+
+.input-field.with-icon-and-toggle {
+  padding-left: 40px;
+  padding-right: 44px;
+  width: 100%;
+}
+
+/* Global Pulse Dot Animation */
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.85);
   }
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import WorkflowSection from "../components/WorkflowSection";
 import {
   ArrowRight,
   CalendarCheck,
@@ -17,6 +18,7 @@ import {
   Phone,
   Pill,
   ShieldCheck,
+  Sparkles,
   Star,
   Stethoscope,
   UploadCloud,
@@ -24,10 +26,13 @@ import {
   Youtube
 } from 'lucide-react';
 
+// Shared container style is now managed globally via the .section-container CSS class
+
 const Home = ({ data }) => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeReview, setActiveReview] = useState(0);
+
   const clinic = {
     name: 'My dentist',
     phone: '(817) 329-6000',
@@ -38,15 +43,17 @@ const Home = ({ data }) => {
   const clinicName = clinic.name || 'My dentist';
   const phone = clinic.phone || '(817) 329-6000';
   const email = clinic.email || 'share@startdentistry.com';
-  const address = clinic.address || 'Rajendra market, Parsa sampatchak road, purani, near Annie Besant school, Parsa Bazar, Patna, Bihar 804453';
+  const address = clinic.address || '...';
+
   const navLinks = [
     { label: 'Home', href: '#home' },
     { label: 'Features', href: '#features' },
     { label: 'Workflow', href: '#workflow' },
-    { label: 'Reviews', href: '#reviews' },
+    { label: 'Walkthrough', href: '#walkthrough' },
     { label: 'Pricing', href: '#pricing' },
     { label: 'Contact', href: '#contact' }
   ];
+
   const featureCards = [
     {
       icon: <FileText size={24} />,
@@ -69,11 +76,7 @@ const Home = ({ data }) => {
       text: 'Store X-rays, lab reports, intake forms, and consent PDFs in an encrypted cloud vault.'
     }
   ];
-  const workflowSteps = [
-    { title: 'Quick Intake', text: 'Onboard a new patient via a digital form in under 2 minutes.' },
-    { title: 'Real-time Charting', text: 'Update treatment notes and medical history mid-appointment seamlessly.' },
-    { title: 'Care Follow-ups', text: 'Prepare medication instructions and next-appointment reminders from one workflow.' }
-  ];
+
   const reviews = [
     { quote: 'My dentist cut our administrative charting time in half.', name: 'Dr. Sarah Jenkins', role: 'Lead Dentist' },
     { quote: 'The patient timeline helps doctors understand a case before entering the room.', name: 'Priya Mehta', role: 'Clinic Administrator' },
@@ -89,7 +92,9 @@ const Home = ({ data }) => {
 
   const scrollToSection = (event, href) => {
     event.preventDefault();
-    const target = document.querySelector(href);
+    // Handle WorkflowSection's id="workflow" directly
+    const id = href.replace('#', '');
+    const target = document.getElementById(id) || document.querySelector(href);
     if (target) {
       const offset = 104;
       const targetTop = target.getBoundingClientRect().top + window.pageYOffset - offset;
@@ -104,6 +109,7 @@ const Home = ({ data }) => {
 
   return (
     <div className="home-container">
+      {/* ── NAV ─────────────────────────────────────────────────────────────── */}
       <nav className="home-nav" id="home">
         <div className="logo-brand">
           <div className="logo-icon-wrapper">
@@ -135,9 +141,22 @@ const Home = ({ data }) => {
       </nav>
 
       <main className="home-main">
+        {/* ── HERO ──────────────────────────────────────────────────────────── */}
         <section className="home-hero">
           <div className="hero-copy animate-fade-in">
-            <div className="badge badge-primary hero-badge">Clinical workspace for modern dental teams</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 22 }}>
+              <span style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                fontSize: 11, fontWeight: 700, letterSpacing: "0.13em",
+                textTransform: "uppercase", color: "#2D7A6B",
+                fontFamily: "'DM Mono', monospace",
+                background: "#E8F5F2", padding: "4px 12px",
+                borderRadius: 100, border: "1px solid rgba(45,122,107,0.2)",
+              }}>
+                <Sparkles size={12} color="#2D7A6B" />
+                Modern Clinical Workspace
+              </span>
+            </div>
             <h1 className="hero-title">
               Run patient care from one <span className="text-gradient">light, organized CRM.</span>
             </h1>
@@ -148,9 +167,11 @@ const Home = ({ data }) => {
               <button className="btn btn-primary btn-lg" onClick={() => navigate('/login')}>
                 Access Dashboard <ArrowRight size={18} />
               </button>
+             
             </div>
+            {/* Social Proof */}
+           
           </div>
-
           <div className="hero-visual animate-fade-in">
             <div className="dental-photo-card" aria-label="Modern dental clinic room">
               <img
@@ -161,80 +182,71 @@ const Home = ({ data }) => {
           </div>
         </section>
 
-      
-
-        <section className="homepage-section" id="features">
-          <div className="homepage-section-heading">
-            <span className="section-kicker">Features and Capabilities</span>
-            <h2>Everything the clinic team needs to manage care</h2>
-            <p>Built around records, prescriptions, treatment planning, and secure documents.</p>
-          </div>
-          <div className="feature-capability-grid">
-            {featureCards.map((feature) => (
-              <article key={feature.title}>
-                <span>{feature.icon}</span>
-                <h3>{feature.title}</h3>
-                <p>{feature.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="workflow-section homepage-section" id="workflow">
-          <div className="homepage-section-heading">
-            <span className="section-kicker">How It Works</span>
-            <h2>A simple clinical workflow from intake to follow-up</h2>
-          </div>
-          <div className="workflow-steps">
-            <div className="workflow-rail-arrows" aria-hidden="true">
-              <ArrowRight size={24} />
-              <ArrowRight size={24} />
-            </div>
-            {workflowSteps.map((step, index) => (
-              <article key={step.title} style={{ '--step-index': index }}>
-                <strong>{index + 1}</strong>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="homepage-section product-walkthrough" id="pricing">
-          <div className="product-walkthrough-shell">
-            <div className="homepage-section-heading">
-              <span className="section-kicker">Interactive Product Walkthrough</span>
-              <h2>The software itself is the hero</h2>
-              <p>Doctors can scan the patient timeline, update treatment plans, prepare prescription instructions, and review secure uploads from one workspace.</p>
-            </div>
-            <div className="product-flow-panel" aria-hidden="true">
-              <div className="product-flow-header">
-                <span>Patient workspace</span>
-                <strong>Live care view</strong>
+        {/* ── FEATURES ──────────────────────────────────────────────────────── */}
+        
+        <section className="homepage-section" id="features" style={{ padding: '40px 0' }}>
+          {/* Inner container — same token as WorkflowSection */}
+          <div className="section-container">
+            <div style={{ marginBottom: 56 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+                <span style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  fontSize: 11, fontWeight: 700, letterSpacing: "0.13em",
+                  textTransform: "uppercase", color: "#2D7A6B",
+                  fontFamily: "'DM Mono', 'Fira Mono', monospace",
+                  background: "#E8F5F2",
+                  padding: "4px 10px", borderRadius: 100,
+                  border: "1px solid rgba(45,122,107,0.2)",
+                }}>
+                  <span style={{
+                    width: 5, height: 5, borderRadius: "50%",
+                    background: "#2D7A6B", display: "inline-block",
+                    animation: "pulse-dot 2s ease-in-out infinite",
+                  }} />
+                  Features and Capabilities
+                </span>
               </div>
-              <div className="product-flow-line">
-                <span style={{ '--flow-step': 0 }}><CalendarCheck size={18} /></span>
-                <span style={{ '--flow-step': 1 }}><Pill size={18} /></span>
-                <span style={{ '--flow-step': 2 }}><UploadCloud size={18} /></span>
-              </div>
-              <div className="product-flow-table">
-                <span>Timeline updated</span>
-                <span>Prescription queued</span>
-                <span>Documents secured</span>
-              </div>
+              <h2 style={{
+                fontSize: "clamp(28px, 3.6vw, 48px)",
+                fontWeight: 800,
+                letterSpacing: "-0.035em",
+                lineHeight: 1.1,
+                color: "#0D1B2A",
+                margin: "0 0 14px",
+                fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
+                maxWidth: 620,
+              }}>
+                Everything the clinic team needs to <span style={{ color: "#2D7A6B" }}>manage care</span>
+              </h2>
+              <p style={{
+                fontSize: 16, lineHeight: 1.7,
+                color: "#64748B",
+                margin: 0, maxWidth: 480,
+                fontFamily: "'DM Sans', system-ui, sans-serif",
+              }}>
+                Built around records, prescriptions, treatment planning, and secure documents.
+              </p>
             </div>
-            <div className="walkthrough-grid">
-              <article><span><CalendarCheck size={22} /></span><h3>Patient Timeline</h3><p>Chronological visits, procedures, prescriptions, and document activity.</p></article>
-              <article><span><Pill size={22} /></span><h3>Prescription Queue</h3><p>Track status and prepare medication instructions without switching tools.</p></article>
-              <article><span><UploadCloud size={22} /></span><h3>Secure Upload Vault</h3><p>Link encrypted X-rays, lab reports, and forms to patient records.</p></article>
+            <div className="feature-capability-grid" style={{ padding: 0 }}>
+              {featureCards.map((feature) => (
+                <article key={feature.title}>
+                  <span>{feature.icon}</span>
+                  <h3>{feature.title}</h3>
+                  <p>{feature.text}</p>
+                </article>
+              ))}
             </div>
           </div>
         </section>
 
+        {/* ── WORKFLOW + WALKTHROUGH (WorkflowSection manages its own container) */}
+        <WorkflowSection />
+
+        {/* ── SECURITY ──────────────────────────────────────────────────────── */}
         <section className="security-compliance-banner" id="security">
-          <div>
+          <div style={{ marginBottom: 0 }}>
             <span className="section-kicker">Security & Compliance</span>
-            <h2>Designed for sensitive medical data</h2>
+            <h2 style={{ color: 'white', margin: '10px 0 0' }}>Designed for sensitive medical data</h2>
           </div>
           <div className="security-badges">
             <span><ShieldCheck size={16} /> HIPAA Compliance</span>
@@ -244,51 +256,91 @@ const Home = ({ data }) => {
           </div>
         </section>
 
-        <section className="homepage-section testimonials-section" id="reviews">
-          <div className="homepage-section-heading">
-            <span className="section-kicker">Patient Reviews</span>
-            <h2>Trusted by busy dental teams</h2>
-          </div>
-          <div className="testimonial-carousel" aria-live="polite">
-            <button type="button" className="carousel-control" aria-label="Previous review" onClick={() => changeReview(-1)}>
-              <ChevronLeft size={20} />
-            </button>
-            <div className="testimonial-viewport">
-              <div className="testimonial-track" style={{ transform: `translateX(-${activeReview * 100}%)` }}>
-                {reviews.map((review) => (
-                  <article className="testimonial-slide" key={review.name}>
-                    <div className="testimonial-stars" aria-label="Five star review">
-                      {Array.from({ length: 5 }).map((_, starIndex) => (
-                        <Star key={starIndex} size={18} fill="currentColor" />
-                      ))}
-                    </div>
-                    <p>"{review.quote}"</p>
-                    <strong>{review.name}</strong>
-                    <span>{review.role}</span>
-                  </article>
-                ))}
+        {/* ── REVIEWS ───────────────────────────────────────────────────────── */}
+        <section className="homepage-section testimonials-section" id="reviews" style={{ padding: '40px 0' }}>
+          <div className="section-container">
+            <div style={{ marginBottom: 56, textAlign: 'left' }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+                <span style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  fontSize: 11, fontWeight: 700, letterSpacing: "0.13em",
+                  textTransform: "uppercase", color: "#2D7A6B",
+                  fontFamily: "'DM Mono', 'Fira Mono', monospace",
+                  background: "#E8F5F2",
+                  padding: "4px 10px", borderRadius: 100,
+                  border: "1px solid rgba(45,122,107,0.2)",
+                }}>
+                  <span style={{
+                    width: 5, height: 5, borderRadius: "50%",
+                    background: "#2D7A6B", display: "inline-block",
+                    animation: "pulse-dot 2s ease-in-out infinite",
+                  }} />
+                  Patient Reviews
+                </span>
               </div>
+              <h2 style={{
+                fontSize: "clamp(28px, 3.6vw, 48px)",
+                fontWeight: 800,
+                letterSpacing: "-0.035em",
+                lineHeight: 1.1,
+                color: "#0D1B2A",
+                margin: "0 0 14px",
+                fontFamily: "'Sora', 'Plus Jakarta Sans', sans-serif",
+                maxWidth: 620,
+              }}>
+                Trusted by <span style={{ color: "#2D7A6B" }}>busy dental teams</span>
+              </h2>
+              <p style={{
+                fontSize: 16, lineHeight: 1.7,
+                color: "#64748B",
+                margin: 0, maxWidth: 480,
+                fontFamily: "'DM Sans', system-ui, sans-serif",
+              }}>
+                See how clinical teams run a calm, efficient practice using our unified CRM.
+              </p>
             </div>
-            <button type="button" className="carousel-control" aria-label="Next review" onClick={() => changeReview(1)}>
-              <ChevronRight size={20} />
-            </button>
-          </div>
-          <div className="carousel-dots" aria-label="Review carousel position">
-            {reviews.map((review, index) => (
-              <button
-                type="button"
-                key={review.name}
-                className={index === activeReview ? 'active' : ''}
-                aria-label={`Show review ${index + 1}`}
-                onClick={() => setActiveReview(index)}
-              />
-            ))}
+            <div className="testimonial-carousel" aria-live="polite" style={{ padding: 0 }}>
+              <button type="button" className="carousel-control" aria-label="Previous review" onClick={() => changeReview(-1)}>
+                <ChevronLeft size={20} />
+              </button>
+              <div className="testimonial-viewport">
+                <div className="testimonial-track" style={{ transform: `translateX(-${activeReview * 100}%)` }}>
+                  {reviews.map((review) => (
+                    <article className="testimonial-slide" key={review.name}>
+                      <div className="testimonial-stars" aria-label="Five star review">
+                        {Array.from({ length: 5 }).map((_, starIndex) => (
+                          <Star key={starIndex} size={18} fill="currentColor" />
+                        ))}
+                      </div>
+                      <p>"{review.quote}"</p>
+                      <strong>{review.name}</strong>
+                      <span>{review.role}</span>
+                    </article>
+                  ))}
+                </div>
+              </div>
+              <button type="button" className="carousel-control" aria-label="Next review" onClick={() => changeReview(1)}>
+                <ChevronRight size={20} />
+              </button>
+            </div>
+            <div className="carousel-dots" style={{ padding: 0 }} aria-label="Review carousel position">
+              {reviews.map((review, index) => (
+                <button
+                  type="button"
+                  key={review.name}
+                  className={index === activeReview ? 'active' : ''}
+                  aria-label={`Show review ${index + 1}`}
+                  onClick={() => setActiveReview(index)}
+                />
+              ))}
+            </div>
           </div>
         </section>
       </main>
 
+      {/* ── FOOTER ────────────────────────────────────────────────────────────── */}
       <footer className="home-footer" id="contact">
-        <div className="footer-content">
+        <div className="footer-content section-container">
           <div className="footer-brand">
             <div className="logo-brand">
               <div className="logo-icon-wrapper">
@@ -296,9 +348,7 @@ const Home = ({ data }) => {
               </div>
               <span className="logo-text">{clinicName}</span>
             </div>
-            <p>
-              Family dental care in Parsa Bazar, Patna with a calm, organized clinical workflow for every visit.
-            </p>
+            <p>Family dental care in Parsa Bazar, Patna with a calm, organized clinical workflow for every visit.</p>
             <div className="footer-socials" aria-label="Social links">
               <a href="#home" aria-label="LinkedIn"><Linkedin size={18} /></a>
               <a href="#home" aria-label="Instagram"><Instagram size={18} /></a>
@@ -309,16 +359,13 @@ const Home = ({ data }) => {
           <div className="footer-contact">
             <h2>Visit {clinicName}</h2>
             <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${clinicName.toUpperCase()}, ${address}`)}`} target="_blank" rel="noreferrer">
-              <MapPin size={18} />
-              <span>{address}</span>
+              <MapPin size={18} /><span>{address}</span>
             </a>
             <a href={`tel:${phone.replace(/[^\d+]/g, '')}`}>
-              <Phone size={18} />
-              <span>{phone}</span>
+              <Phone size={18} /><span>{phone}</span>
             </a>
             <a href={`mailto:${email}`}>
-              <Mail size={18} />
-              <span>{email}</span>
+              <Mail size={18} /><span>{email}</span>
             </a>
           </div>
 

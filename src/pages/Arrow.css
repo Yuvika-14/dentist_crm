@@ -1,0 +1,148 @@
+.workflow-container {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  margin-top: 5rem;
+}
+
+/* BACKGROUND LINE */
+
+.workflow-line {
+  position: absolute;
+  top: 36px;
+  left: 10%;
+  width: 80%;
+  height: 4px;
+  background: #dfe7e4;
+  border-radius: 999px;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* ANIMATED FLOW */
+
+.workflow-line-fill {
+  width: 0%;
+  height: 100%;
+  background: #4f7c74;
+  border-radius: 999px;
+
+  animation: mercuryFlow 6s ease-in-out infinite;
+}
+
+/* CARDS */
+
+.workflow-card {
+  position: relative;
+  z-index: 2;
+
+  flex: 1;
+
+  background: white;
+  border: 1px solid #e7ece9;
+  border-radius: 24px;
+
+  padding: 2rem;
+}
+
+/* CIRCLES */
+
+.workflow-circle {
+  width: 72px;
+  height: 72px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 1.5rem;
+
+  font-size: 1.5rem;
+  font-weight: 700;
+
+  background: #dfe7e4;
+  color: #35675f;
+
+  transform: scale(0.85);
+}
+
+/* STEP 1 */
+
+.step-1 .workflow-circle {
+  animation: stepPulse 6s infinite;
+  animation-delay: 0s;
+}
+
+/* STEP 2 */
+
+.step-2 .workflow-circle {
+  animation: stepPulse 6s infinite;
+  animation-delay: 2s;
+}
+
+/* STEP 3 */
+
+.step-3 .workflow-circle {
+  animation: stepPulse 6s infinite;
+  animation-delay: 4s;
+}
+
+/* LINE FILL */
+
+@keyframes mercuryFlow {
+  0% {
+    width: 0%;
+  }
+
+  30% {
+    width: 35%;
+  }
+
+  65% {
+    width: 68%;
+  }
+
+  100% {
+    width: 100%;
+  }
+}
+
+/* STEP ACTIVATION */
+
+@keyframes stepPulse {
+  0% {
+    background: #dfe7e4;
+    color: #35675f;
+    transform: scale(0.85);
+  }
+
+  15% {
+    background: #4f7c74;
+    color: white;
+    transform: scale(1);
+
+    box-shadow: 0 0 25px rgba(79, 124, 116, 0.35);
+  }
+
+  35% {
+    background: #4f7c74;
+    color: white;
+    transform: scale(1);
+  }
+
+  50% {
+    background: #dfe7e4;
+    color: #35675f;
+    transform: scale(0.85);
+    box-shadow: none;
+  }
+
+  100% {
+    background: #dfe7e4;
+    color: #35675f;
+    transform: scale(0.85);
+  }
+}

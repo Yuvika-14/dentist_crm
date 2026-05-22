@@ -230,12 +230,12 @@ const PatientsList = ({ patients, addPatient, deletePatient }) => {
                   <td>{patient.nextVisit || 'Not scheduled'}</td>
                   <td><span className="badge badge-warning">{patient.condition}</span></td>
                   <td>
-                    <div className="table-actions">
+                    <div className="table-actions" style={{ flexWrap: 'nowrap', whiteSpace: 'nowrap' }}>
                       <button className="btn btn-secondary compact-btn" onClick={() => navigate(`/patients/${patient.id}`)}>
-                        <Eye size={14} /> View file
+                        <Eye size={14} /> View
                       </button>
-                      <button className="btn btn-danger compact-btn" onClick={() => handleDelete(patient)}>
-                        <Trash2 size={14} /> Delete
+                      <button className="btn btn-danger compact-btn" onClick={() => handleDelete(patient)} title="Delete">
+                        <Trash2 size={14} />
                       </button>
                     </div>
                   </td>
